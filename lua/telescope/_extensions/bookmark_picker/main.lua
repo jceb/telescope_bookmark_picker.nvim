@@ -21,29 +21,31 @@ local load_bookmark = function(prompt_bufnr)
     local bookmark = actions_state.get_selected_entry().value
     -- P(bookmark)
     actions.close(prompt_bufnr)
-    vim.cmd("tabe " .. bookmark)
+    vim.cmd("e " .. bookmark)
 end
 
 local bookmark_picker = function(bookmarks, opts)
-    pickers.new(opts, {
-        prompt_title = "Select a bookmark",
-        results_title = "bookmarks",
-        finder = finders.new_table({
-            results = bookmarks,
-            entry_maker = function(entry)
-                return {
-                    value = entry.path,
-                    display = entry.name,
-                    ordinal = entry.name,
-                }
+    pickers
+        .new(opts, {
+            prompt_title = "Select a bookmark",
+            results_title = "bookmarks",
+            finder = finders.new_table({
+                results = bookmarks,
+                entry_maker = function(entry)
+                    return {
+                        value = entry.path,
+                        display = entry.name,
+                        ordinal = entry.name,
+                    }
+                end,
+            }),
+            sorter = conf.file_sorter({}),
+            attach_mappings = function(prompt_bufnr, map)
+                map("i", "<CR>", load_bookmark)
+                return true
             end,
-        }),
-        sorter = conf.file_sorter({}),
-        attach_mappings = function(prompt_bufnr, map)
-            map("i", "<CR>", load_bookmark)
-            return true
-        end,
-    }):find()
+        })
+        :find()
 end
 
 local bookmarks_file = vim.fn.expand("~/.config/gtk-3.0/bookmarks")
