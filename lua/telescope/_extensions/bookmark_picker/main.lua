@@ -21,7 +21,7 @@ local load_bookmark = function(prompt_bufnr)
     local bookmark = actions_state.get_selected_entry().value
     -- P(bookmark)
     actions.close(prompt_bufnr)
-    vim.cmd("e " .. bookmark)
+    vim.cmd("e! " .. bookmark)
 end
 
 local bookmark_picker = function(bookmarks, opts)
