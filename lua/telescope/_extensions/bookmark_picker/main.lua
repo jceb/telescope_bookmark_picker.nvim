@@ -83,17 +83,18 @@ M.run_bookmark_picker = function(opts)
     local read = vim.loop.fs_read(handle, 1000)
     local bookmarks = {}
     while read ~= "" do
-        file_contents = read
+        file_contents = file_contents .. read
         read = vim.loop.fs_read(handle, 1000)
     end
     for line in vim.gsplit(file_contents, "\n") do
-        local bookmark
-        for i, entry in ipairs(vim.split(line, " ")) do
-            if i == 1 then
-                bookmark = entry
-            else
-                table.insert(bookmarks, { name = entry, path = stripFile(unescape(bookmark)) })
-            end
+        local sep_idx
+        local name
+        local path
+        sep_idx = string.find(line, " [^ ]+$")
+        if sep_idx ~= nil then
+            name = string.sub(line, sep_idx + 1)
+            path = string.sub(line, 1, sep_idx - 1)
+            table.insert(bookmarks, { name = name, path = path })
         end
     end
 
