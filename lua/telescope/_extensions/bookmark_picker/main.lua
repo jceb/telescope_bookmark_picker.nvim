@@ -94,7 +94,7 @@ M.run_bookmark_picker = function(opts)
         if sep_idx ~= nil then
             name = string.sub(line, sep_idx + 1)
             path = string.sub(line, 1, sep_idx - 1)
-            table.insert(bookmarks, { name = name, path = path })
+            table.insert(bookmarks, { name = name, path = stripFile(path) })
         end
     end
 
